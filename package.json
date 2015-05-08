@@ -10,7 +10,7 @@
     "machines",
     "machinepack"
   ],
-  "author": "",
+  "author": "Mike McNeil",
   "license": "MIT",
   "dependencies": {
     "machine": "^4.0.0"
@@ -23,6 +23,11 @@
     "machineDir": "machines/",
     "machines": [
       "spawn"
-    ]
+    ],
+    "testsUrl": "https://travis-ci.org/treelinehq/machinepack-process"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:treelinehq/machinepack-process.git"
   }
 }
