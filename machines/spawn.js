@@ -42,7 +42,7 @@ module.exports = {
     },
 
     success: {
-      variableName: 'output',
+      variableName: 'bufferedOutput',
       description: 'Done.',
       example: {
         stdout: '...',
