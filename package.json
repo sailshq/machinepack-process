@@ -13,6 +13,7 @@
   "author": "Mike McNeil",
   "license": "MIT",
   "dependencies": {
+    "lodash": "^3.8.0",
     "machine": "^4.0.0"
   },
   "devDependencies": {

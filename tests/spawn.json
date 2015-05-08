@@ -1,4 +1,15 @@
 {
   "machine": "spawn",
-  "expectations": []
+  "expectations": [
+    {
+      "using": {
+        "command": "echo hi"
+      },
+      "outcome": "success",
+      "returns": {
+        "stdout": "hi\n",
+        "stderr": ""
+      }
+    }
+  ]
 }
