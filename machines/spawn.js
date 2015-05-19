@@ -36,6 +36,11 @@ module.exports = {
       description: 'The specified path points to a something which is not a directory (e.g. a file or shortcut).'
     },
 
+    forbidden: {
+      friendlyName: 'forbidden',
+      description: 'Insufficient permissions to spawn process from the specified path (i.e. you might need to use `chown`/`chmod`)'
+    },
+
     noSuchDir: {
       friendlyName: 'no such directory',
       description: 'Cannot run process from the specified path because no such directory exists.'
@@ -86,6 +91,9 @@ module.exports = {
           }
           if (err.code==='ENOENT') {
             return exits.noSuchDir();
+          }
+          if (err.code==='EACCES') {
+            return exits.forbidden();
           }
         }
         // console.log('errno',err.errno);
