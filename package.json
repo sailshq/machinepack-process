@@ -25,7 +25,6 @@
     "machineDir": "machines/",
     "machines": [
       "spawn",
-      "add-to-history",
       "escape"
     ],
     "testsUrl": "https://travis-ci.org/treelinehq/machinepack-process"
