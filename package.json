@@ -14,7 +14,8 @@
   "license": "MIT",
   "dependencies": {
     "lodash": "^3.8.0",
-    "machine": "^8.0.0"
+    "machine": "^8.0.0",
+    "machinepack-json": "^1.1.0"
   },
   "devDependencies": {
     "test-machinepack-mocha": "^0.2.2"
@@ -23,7 +24,9 @@
     "friendlyName": "Process",
     "machineDir": "machines/",
     "machines": [
-      "spawn"
+      "spawn",
+      "add-to-history",
+      "escape"
     ],
     "testsUrl": "https://travis-ci.org/treelinehq/machinepack-process"
   },
