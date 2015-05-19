@@ -85,23 +85,24 @@ module.exports = {
         if (!_.isObject(err)) {
           return exits.error(err);
         }
-        console.log('err=>',err);
-        console.log('keys=>',Object.keys(err));
-        console.log('err.code=>',err.code);
-        console.log('err.killed=>',err.killed);
-        console.log('err.syscall=>',err.syscall);
-        console.log('err.errno=>',err.errno); // e.g. 127 || 'ENOENT'
-        console.log('err.signal=>',err.signal); // e.g. 'SIGTERM'
-        if (err.syscall==='spawn') {
-          if (err.code==='ENOTDIR') {
-            return exits.notADir();
-          }
-          if (err.code==='ENOENT') {
-            return exits.noSuchDir();
-          }
-          if (err.code==='EACCES') {
-            return exits.forbidden();
-          }
+        // console.log('err=>',err);
+        // console.log('keys=>',Object.keys(err));
+        // console.log('err.code=>',err.code);
+        // console.log('err.killed=>',err.killed);
+        // console.log('err.syscall=>',err.syscall);
+        // console.log('err.errno=>',err.errno); // e.g. 127 || 'ENOENT'
+        // console.log('err.signal=>',err.signal); // e.g. 'SIGTERM'
+
+        // `err.syscall.match(/spawn/i)` should be true as well, but not testing since
+        // Node v0.12 changed this a bit and we want to future-proof ourselves if possible.
+        if (err.code==='ENOTDIR') {
+          return exits.notADir();
+        }
+        if (err.code==='ENOENT') {
+          return exits.noSuchDir();
+        }
+        if (err.code==='EACCES') {
+          return exits.forbidden();
         }
         return exits.error(err);
       }
