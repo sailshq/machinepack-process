@@ -85,6 +85,7 @@ module.exports = {
         if (!_.isObject(err)) {
           return exits.error(err);
         }
+        console.log('=>',err);
         if (err.syscall==='spawn') {
           if (err.code==='ENOTDIR') {
             return exits.notADir();
