@@ -85,7 +85,13 @@ module.exports = {
         if (!_.isObject(err)) {
           return exits.error(err);
         }
-        console.log('=>',err);
+        console.log('err=>',err);
+        console.log('keys=>',Object.keys(err));
+        console.log('err.code=>',err.code);
+        console.log('err.killed=>',err.killed);
+        console.log('err.syscall=>',err.syscall);
+        console.log('err.errno=>',err.errno); // e.g. 127 || 'ENOENT'
+        console.log('err.signal=>',err.signal); // e.g. 'SIGTERM'
         if (err.syscall==='spawn') {
           if (err.code==='ENOTDIR') {
             return exits.notADir();
@@ -97,12 +103,6 @@ module.exports = {
             return exits.forbidden();
           }
         }
-        // console.log('errno',err.errno);
-        // console.log('syscall',err.syscall);
-        // console.log(_.keys(err));
-        // console.log(err.stack);
-        // console.log('err code: ' + err.code); // e.g. 127 || 'ENOENT'
-        // console.log('Signal received: ' + err.signal); // e.g. 'SIGTERM'
         return exits.error(err);
       }
 
