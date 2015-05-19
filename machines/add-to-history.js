@@ -33,7 +33,7 @@ module.exports = {
   fn: function (inputs,exits) {
     var thisPack = require('../');
     thisPack.spawn({
-      command: 'history -s ' + '\''+inputs.command.replace(/'/g,'\'\\\'\'')+'\''
+      command: 'history -s ' + '\''+thisPack.escape({value:inputs.command}).execSync()+'\''
     }).exec({
       error: exits.error,
       success: function (){
