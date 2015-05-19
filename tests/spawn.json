@@ -10,6 +10,13 @@
         "stdout": "hi\n",
         "stderr": ""
       }
+    },
+    {
+      "using": {
+        "command": "echo hi",
+        "dir": "/place/that/totally/doesnt/exist"
+      },
+      "outcome": "noSuchDir"
     }
   ]
 }
