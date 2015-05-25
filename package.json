@@ -1,6 +1,6 @@
 {
   "name": "machinepack-process",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Work with child procs and the running process.",
   "scripts": {
     "test": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js"
