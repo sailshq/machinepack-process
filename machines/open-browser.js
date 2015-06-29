@@ -4,10 +4,10 @@ module.exports = {
   friendlyName: 'Open browser',
 
 
-  sync: true,
-
-
   description: 'Open the user\'s browser and navigate to the given URL.',
+
+
+  sync: true,
 
 
   inputs: {
