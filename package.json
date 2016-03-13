@@ -13,9 +13,9 @@
   "author": "Mike McNeil",
   "license": "MIT",
   "dependencies": {
-    "lodash": "^3.9.2",
-    "machine": "^10.3.1",
-    "machinepack-json": "^1.1.0",
+    "lodash": "3.9.2",
+    "machine": "~10.3.1",
+    "machinepack-json": "1.2.1",
     "open": "0.0.5"
   },
   "devDependencies": {
@@ -25,9 +25,11 @@
     "friendlyName": "Process",
     "machineDir": "machines/",
     "machines": [
-      "spawn",
-      "escape",
-      "open-browser"
+      "open-browser",
+      "escape-cli-opt",
+      "kill-child-process",
+      "spawn-child-process",
+      "execute-command"
     ],
     "testsUrl": "https://travis-ci.org/treelinehq/machinepack-process"
   },

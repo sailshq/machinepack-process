@@ -1,13 +1,18 @@
 module.exports = {
 
 
-  friendlyName: 'Run a command',
+  friendlyName: 'Execute command',
 
 
-  description: 'Spawn a child process to run a command like you would on the terminal.',
+  description: 'Execute a command like you would on the terminal.',
 
 
-  extendedDescription: 'This machine will wait to pass control until the resulting child process exits.',
+  extendedDescription:
+  'This uses the `child_process.exec()` method from Node.js core to run the specified command. '+
+  'The success exit from this machine will not be called until the command has finished running (i.e. the resulting child process exits).',
+
+
+  moreInfoUrl: 'https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback',
 
 
   inputs: {
@@ -21,9 +26,16 @@ module.exports = {
 
     dir: {
       friendlyName: 'Run from...',
-      description: 'The path to the directory from which this process will run.',
-      extendedDescription: 'If not set, this input defaults to the present working directory (`pwd`).  Also, if a relative path is provided, it will be resolved relative to `pwd`.',
+      description: 'The path to the directory where this command will be run.',
+      extendedDescription: 'If not set, this defaults to the present working directory.  If a relative path is provided, it will be resolved relative to the present working directory.',
       example: '/Users/mikermcneil/foo'
+    },
+
+    timeout: {
+      friendlyName: 'Timeout',
+      description: 'The maximum number of miliseconds to wait for this command to finish.',
+      extendedDescription: 'If not set, no time limit will be enforced.',
+      example: 60000
     }
 
   },
@@ -46,6 +58,8 @@ module.exports = {
       description: 'Cannot run process from the specified path because no such directory exists.'
     },
 
+    // TODO: `timeout` exit (need to experiment here-- it is not explicitly covered in Node core docs)
+
     success: {
       variableName: 'bufferedOutput',
       description: 'Done.',
@@ -61,28 +75,32 @@ module.exports = {
   fn: function (inputs,exits) {
 
     var path = require('path');
-    var _ = require('lodash');
-    var childProcess = require('child_process');
+    var util = require('util');
+    var executeCmdInChildProc = require('child_process').exec;
 
+    // First, build up the options to pass in to `child_process.exec()`.
+    var childProcOpts = {};
 
-    if (_.isUndefined(inputs.dir)) {
+    // Determine the appropriate `cwd` for `child_process.exec()`.
+    if (util.isUndefined(inputs.dir)) {
       // Default directory to current working directory
-      inputs.dir = process.cwd();
+      childProcOpts.cwd = process.cwd();
     }
     else {
       // (or if a `dir` was specified, resolve it to make sure
       //  it's an absolute path.)
-      inputs.dir = path.resolve(inputs.dir);
+      childProcOpts.cwd = path.resolve(inputs.dir);
     }
 
-    // For reference, docs here:
-    // https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
-    //
-    var runningProc = childProcess.exec(inputs.command, {
-      cwd: inputs.dir
-    }, function onClose(err, bufferedStdout, bufferedStderr) {
+    // If `timeout` was provided, pass it in to `child_process.exec()`.
+    if (util.isUndefined(inputs.timeout)) {
+      childProcOpts.timeout = inputs.timeout;
+    }
+
+    // Now spawn the child process.
+    var liveChildProc = executeCmdInChildProc(inputs.command, childProcOpts, function onClose(err, bufferedStdout, bufferedStderr) {
       if (err) {
-        if (!_.isObject(err)) {
+        if (!util.isObject(err)) {
           return exits.error(err);
         }
         // console.log('err=>',err);

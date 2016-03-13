@@ -7,7 +7,7 @@ module.exports = {
   description: 'Escape a value for use as a command-line option (e.g. the "XXXXX" in `--foobar=\'XXXXX\'`).',
 
 
-  extendedDescription: 'The result should be wrapped in single quotes when building up the final CLI options string.  For instance `--foo=\'RESULT_FROM_THIS_MACHINE_HERE\'`  or `-f \'RESULT_FROM_THIS_MACHINE_HERE\'',
+  extendedDescription: 'When using the escaped result returned from this method, make sure to wrap it in single quotes when building up the final CLI options string.  For instance `--foo=\'RESULT_FROM_THIS_MACHINE_HERE\'`  or `-f \'RESULT_FROM_THIS_MACHINE_HERE\'',
 
 
   cacheable: true,
@@ -56,11 +56,12 @@ module.exports = {
     else {
       val = val+'';
     }
+
     if (!_.isString(val)) {
       return exits.couldNotSerialize();
     }
 
-    // Now escape the resulting string
+    // Now escape the resulting string as a CLI option.
     val = val.replace(/'/g,'\'\\\'\'');
 
     return exits.success(val);
