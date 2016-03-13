@@ -50,11 +50,12 @@ module.exports = {
     var util = require('util');
     var MPJSON = require('machinepack-json');
 
-    // Stringify if necessary
+    // If this is a dictionary/array, then JSON stringify it.
     var val = inputs.value;
     if (util.isObject(val)) {
       val = MPJSON.stringifySafe({value:val}).execSync();
     }
+    // Otherwise, cast it to a string.
     else {
       val = val+'';
     }
