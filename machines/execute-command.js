@@ -9,7 +9,9 @@ module.exports = {
 
   extendedDescription:
   'This uses the `child_process.exec()` method from Node.js core to run the specified command. '+
-  'The success exit from this machine will not be called until the command has finished running (i.e. the resulting child process exits).',
+  'The success exit from this machine will not be called until the command has finished running (i.e. the resulting child process exits). '+
+  'If you need a more advanced/flexible interface, check out `spawnChildProcess()`.  It is much lower-level, and exposes raw access to the '+
+  'child process instance.',
 
 
   moreInfoUrl: 'https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback',
@@ -19,7 +21,7 @@ module.exports = {
 
     command: {
       friendlyName: 'Command',
-      description: 'The command to run.',
+      description: 'The command to run, including any whitespace-delimited CLI args/opts.',
       example: 'ls -la',
       required: true
     },

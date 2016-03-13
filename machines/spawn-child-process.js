@@ -8,9 +8,11 @@ module.exports = {
 
 
   extendedDescription:
-  'This uses the `child_process.spawn()` method from Node.js core. '+
+  'This method should only be used when low-level access to the raw child process instance is necessary.  Instead, when possible, use `executeCommand()`-- '+
+  'it has a much easier and much less error-prone interface. This method, on the other hand, uses the `child_process.spawn()` method from Node.js core. '+
   'The success exit from this machine will be called BEFORE the command has finished running (i.e. before the resulting child process exits). '+
-  'Note that it is _very important_ that this method is synchronous, to ensure that the child process instance returned is actually useful.',
+  'Note that it is _very important_ that this method is synchronous, to ensure that the child process instance returned is available in time to bind '+
+  'events.',
 
 
   moreInfoUrl: 'https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options',
