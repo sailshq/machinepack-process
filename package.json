@@ -13,8 +13,8 @@
   "author": "Mike McNeil",
   "license": "MIT",
   "dependencies": {
-    "machine": "~10.3.1",
-    "machinepack-json": "1.2.1",
+    "machine": "~12.1.0",
+    "machinepack-json": "~2.0.0",
     "open": "0.0.5"
   },
   "devDependencies": {
