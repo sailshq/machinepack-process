@@ -1,5 +1,5 @@
 {
-  "machine": "escape",
+  "machine": "escape-cli-opt",
   "expectations": [
     {
       "using": {

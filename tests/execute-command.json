@@ -1,5 +1,5 @@
 {
-  "machine": "spawn",
+  "machine": "execute-command",
   "expectations": [
     {
       "using": {
