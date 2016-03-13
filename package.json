@@ -3,7 +3,7 @@
   "version": "1.4.0",
   "description": "Work with child procs and the running process.",
   "scripts": {
-    "test": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js"
+    "test": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js && ./node_modules/mocha/bin/mocha tests/*.js --timeout 5000"
   },
   "keywords": [
     "Process",
@@ -13,12 +13,14 @@
   "author": "Mike McNeil",
   "license": "MIT",
   "dependencies": {
-    "lodash": "3.9.2",
     "machine": "~10.3.1",
     "machinepack-json": "1.2.1",
     "open": "0.0.5"
   },
   "devDependencies": {
+    "async": "1.5.2",
+    "lodash": "3.9.2",
+    "mocha": "2.4.5",
     "test-machinepack-mocha": "^2.1.1"
   },
   "machinepack": {

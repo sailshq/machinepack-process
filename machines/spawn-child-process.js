@@ -8,20 +8,31 @@ module.exports = {
 
 
   extendedDescription:
-  'This uses the `child_process.spawn()` method from Node.js core.'+
-  'The success exit from this machine will be called BEFORE the command has finished running (i.e. before the resulting child process exits).',
+  'This uses the `child_process.spawn()` method from Node.js core. '+
+  'The success exit from this machine will be called BEFORE the command has finished running (i.e. before the resulting child process exits). '+
+  'Note that it is _very important_ that this method is synchronous, to ensure that the child process instance returned is actually useful.',
 
 
   moreInfoUrl: 'https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options',
+
+
+  sync: true,
 
 
   inputs: {
 
     command: {
       friendlyName: 'Command',
-      description: 'The command to run in the child process.',
-      example: 'man ls -la --help --foo=\'bar\'',
+      description: 'The command to run in the child process, without any CLI arguments or options.',
+      example: 'ls',
       required: true
+    },
+
+    cliArgsAndOpts: {
+      friendlyName: 'CLI args & opts',
+      description: 'Command-line arguments (e.g. `commit` or `install`) and options (e.g. `-al` or `-f 7` or `--foo=\'bar\'`) to pass in.',
+      example: ['-la'],
+      defaultsTo: []
     },
 
     dir: {
@@ -79,8 +90,18 @@ module.exports = {
       childProcOpts.env = inputs.environmentVars;
     }
 
-    // Now spawn the child process and set up a no-op error listener to prevent crashing.
-    var liveChildProc = spawn(inputs.command, childProcOpts);
+    // Next, take the provided command and chop off everything after the first
+    // whitespace character (if relevant) and convert that into an array of string
+    // CLI args. (Node core is tolerant of CLI args mixed in with the main "command" in
+    //  `child_process.exec()`, but it is not so forgiving when using `child_process.spawn()`)
+    var chunks = inputs.command.split(/[^\\]\s/);
+    console.log(chunks);
+    inputs.command = chunks.shift();
+    var cliArgs = chunks;
+
+
+    // Then spawn the child process and set up a no-op error listener to prevent crashing.
+    var liveChildProc = spawn(inputs.command, inputs.cliArgsAndOpts, childProcOpts);
     liveChildProc.on('error', function wheneverAnErrorIsEmitted(err){ /* ... */ });
 
     // Return live child process.

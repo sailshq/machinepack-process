@@ -45,19 +45,19 @@ module.exports = {
 
   fn: function (inputs,exits) {
 
-    var _ = require('lodash');
+    var util = require('util');
     var MPJSON = require('machinepack-json');
 
     // Stringify if necessary
     var val = inputs.value;
-    if (_.isObject(val)) {
+    if (util.isObject(val)) {
       val = MPJSON.stringifySafe({value:val}).execSync();
     }
     else {
       val = val+'';
     }
 
-    if (!_.isString(val)) {
+    if (!util.isString(val)) {
       return exits.couldNotSerialize();
     }
 
