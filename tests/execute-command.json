@@ -17,6 +17,25 @@
         "dir": "/place/that/totally/doesnt/exist"
       },
       "outcome": "noSuchDir"
+    },
+    {
+      "using": {
+        "command": "ls -la ./",
+        "environmentVars": {
+          "NODE_ENV": "production"
+        }
+      },
+      "outcome": "success"
+    },
+    {
+      "using": {
+        "command": "ls -la ./",
+        "environmentVars": {
+          "NODE_ENV": "production"
+        },
+        "timeout": 1
+      },
+      "outcome": "timedOut"
     }
   ]
 }

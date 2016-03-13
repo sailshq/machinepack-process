@@ -31,10 +31,17 @@ module.exports = {
       example: '/Users/mikermcneil/foo'
     },
 
+    environmentVars: {
+      friendlyName: 'Environment variables',
+      description: 'A dictionary of environment variables to provide to the child process.',
+      extendedDescription: 'By default, the same environment variables as in the current process will be used.  If specified, the dictionary should consist of the name of each environment variable as a key, and the value of the variable on the right-hand side.  The value of any environment variable is always a string.',
+      example: {}
+    },
+
     timeout: {
       friendlyName: 'Timeout',
       description: 'The maximum number of miliseconds to wait for this command to finish.',
-      extendedDescription: 'If not set, no time limit will be enforced.',
+      extendedDescription: 'By default, no time limit will be enforced.  Note that if the time limit is reached, SIGERM will be sent to the child process.',
       example: 60000
     }
 
@@ -58,11 +65,16 @@ module.exports = {
       description: 'Cannot run process from the specified path because no such directory exists.'
     },
 
-    // TODO: `timeout` exit (need to experiment here-- it is not explicitly covered in Node core docs)
+    timedOut: {
+      friendlyName: 'Timed out',
+      description: 'The specified command was automatically killed because it had not finished before the configured time limit (`timeout`).',
+      extendedDescription: 'Note that the command _may have already caused side effects_ before it was stopped.'
+    },
 
     success: {
       variableName: 'bufferedOutput',
-      description: 'Done.',
+      outputDescription: 'The output returned from executing the command.',
+      extendedDescription: 'Note that the output is split into that which came from "stdout" vs. that which came from "stderr". ',
       example: {
         stdout: '...',
         stderr: '...'
@@ -93,9 +105,22 @@ module.exports = {
     }
 
     // If `timeout` was provided, pass it in to `child_process.exec()`.
-    if (util.isUndefined(inputs.timeout)) {
+    // Note that we also track a timestamp (epoch ms) for use in negotiating errors below.
+    var timestampBeforeExecutingCmd;
+    if (!util.isUndefined(inputs.timeout)) {
+      if (inputs.timeout < 1) {
+        return exits.error('Invalid timeout (`'+inputs.timeout+'`).  Must be greater than zero.  Remember: `timeout` should be used to indicate the maximum number of miliseconds to wait for this command to finish before giving up.');
+      }
       childProcOpts.timeout = inputs.timeout;
+      timestampBeforeExecutingCmd = (new Date()).getTime();
     }
+
+    // If `environmentVars` were provided, pass them in to `child_process.exec()`.
+    if (!util.isUndefined(inputs.environmentVars)) {
+      childProcOpts.env = inputs.environmentVars;
+    }
+
+
 
     // Now spawn the child process.
     var liveChildProc = executeCmdInChildProc(inputs.command, childProcOpts, function onClose(err, bufferedStdout, bufferedStderr) {
@@ -121,6 +146,14 @@ module.exports = {
         }
         if (err.code==='EACCES') {
           return exits.forbidden();
+        }
+
+        // Check to see if this error is because of the configured timeout.
+        if (err.signal==='SIGTERM' && inputs.timeout) {
+          var msElapsed = (new Date()).getTime() - timestampBeforeExecutingCmd;
+          if (msElapsed >= inputs.timeout) {
+            return exits.timedOut();
+          }
         }
         return exits.error(err);
       }

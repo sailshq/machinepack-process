@@ -62,7 +62,8 @@ module.exports = {
   fn: function (inputs,exits) {
     var util = require('util');
 
-    if (!util.isObject(inputs.childProcess) || !util.isFunction(inputs.childProcess.kill) || !util.isFunction(inputs.childProcess.on)) {
+    // Validate that the provided child process instance is at least close to the real deal.
+    if (!util.isObject(inputs.childProcess) || !util.isFunction(inputs.childProcess.kill) || !util.isFunction(inputs.childProcess.on) || !util.isFunction(inputs.childProcess.removeListener)) {
       return exits.invalidChildProcess();
     }
 
