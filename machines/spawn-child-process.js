@@ -24,13 +24,14 @@ module.exports = {
     command: {
       friendlyName: 'Command',
       description: 'The command to run in the child process, without any CLI arguments or options.',
+      extendedDescription: 'Node core is tolerant of CLI args mixed in with the main "command" in `child_process.exec()`, but it is not so forgiving when using `child_process.spawn()`.',
       example: 'ls',
       required: true
     },
 
-    cliArgsAndOpts: {
-      friendlyName: 'CLI args & opts',
-      description: 'Command-line arguments (e.g. `commit` or `install`) and options (e.g. `-al` or `-f 7` or `--foo=\'bar\'`) to pass in.',
+    cliArgs: {
+      friendlyName: 'CLI args',
+      description: 'An array of command-line arguments (e.g. `commit` or `install`) and/or options (e.g. `-al` or `-f 7` or `--foo=\'bar\'`) to pass in.',
       example: ['-la'],
       defaultsTo: []
     },
@@ -90,18 +91,8 @@ module.exports = {
       childProcOpts.env = inputs.environmentVars;
     }
 
-    // Next, take the provided command and chop off everything after the first
-    // whitespace character (if relevant) and convert that into an array of string
-    // CLI args. (Node core is tolerant of CLI args mixed in with the main "command" in
-    //  `child_process.exec()`, but it is not so forgiving when using `child_process.spawn()`)
-    var chunks = inputs.command.split(/[^\\]\s/);
-    console.log(chunks);
-    inputs.command = chunks.shift();
-    var cliArgs = chunks;
-
-
     // Then spawn the child process and set up a no-op error listener to prevent crashing.
-    var liveChildProc = spawn(inputs.command, inputs.cliArgsAndOpts, childProcOpts);
+    var liveChildProc = spawn(inputs.command, inputs.cliArgs, childProcOpts);
     liveChildProc.on('error', function wheneverAnErrorIsEmitted(err){ /* ... */ });
 
     // Return live child process.
