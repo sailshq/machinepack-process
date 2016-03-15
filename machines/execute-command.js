@@ -87,16 +87,16 @@ module.exports = {
 
 
   fn: function (inputs,exits) {
-
     var path = require('path');
-    var util = require('util');
     var executeCmdInChildProc = require('child_process').exec;
+    var isObject = require('lodash.isobject');
+    var isUndefined = require('lodash.isundefined');
 
     // First, build up the options to pass in to `child_process.exec()`.
     var childProcOpts = {};
 
     // Determine the appropriate `cwd` for `child_process.exec()`.
-    if (util.isUndefined(inputs.dir)) {
+    if (isUndefined(inputs.dir)) {
       // Default directory to current working directory
       childProcOpts.cwd = process.cwd();
     }
@@ -109,7 +109,7 @@ module.exports = {
     // If `timeout` was provided, pass it in to `child_process.exec()`.
     // Note that we also track a timestamp (epoch ms) for use in negotiating errors below.
     var timestampBeforeExecutingCmd;
-    if (!util.isUndefined(inputs.timeout)) {
+    if (!isUndefined(inputs.timeout)) {
       if (inputs.timeout < 1) {
         return exits.error('Invalid timeout (`'+inputs.timeout+'`).  Must be greater than zero.  Remember: `timeout` should be used to indicate the maximum number of miliseconds to wait for this command to finish before giving up.');
       }
@@ -118,7 +118,7 @@ module.exports = {
     }
 
     // If `environmentVars` were provided, pass them in to `child_process.exec()`.
-    if (!util.isUndefined(inputs.environmentVars)) {
+    if (!isUndefined(inputs.environmentVars)) {
       childProcOpts.env = inputs.environmentVars;
     }
 
@@ -127,7 +127,7 @@ module.exports = {
     // Now spawn the child process.
     var liveChildProc = executeCmdInChildProc(inputs.command, childProcOpts, function onClose(err, bufferedStdout, bufferedStderr) {
       if (err) {
-        if (!util.isObject(err)) {
+        if (!isObject(err)) {
           return exits.error(err);
         }
         // console.log('err=>',err);

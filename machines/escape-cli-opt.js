@@ -46,13 +46,14 @@ module.exports = {
 
 
   fn: function (inputs,exits) {
-
     var util = require('util');
+    var isObject = require('lodash.isobject');
+    var isString = require('lodash.isstring');
     var MPJSON = require('machinepack-json');
 
     // If this is a dictionary/array, then JSON stringify it.
     var val = inputs.value;
-    if (util.isObject(val)) {
+    if (isObject(val)) {
       val = MPJSON.stringifySafe({value:val}).execSync();
     }
     // Otherwise, cast it to a string.
@@ -60,7 +61,7 @@ module.exports = {
       val = val+'';
     }
 
-    if (!util.isString(val)) {
+    if (!isString(val)) {
       return exits.couldNotSerialize();
     }
 
