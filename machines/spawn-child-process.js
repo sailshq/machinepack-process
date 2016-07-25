@@ -24,7 +24,6 @@ module.exports = {
   inputs: {
 
     command: {
-      friendlyName: 'Command',
       description: 'The command to run in the child process, without any CLI arguments or options.',
       extendedDescription: 'Node core is tolerant of CLI args mixed in with the main "command" in `child_process.exec()`, but it is not so forgiving when using `child_process.spawn()`.',
       example: 'ls',
@@ -58,11 +57,11 @@ module.exports = {
   exits: {
 
     success: {
-      outputVariableName: 'childProcess',
+      outputFriendlyName: 'Child process',
       outputDescription: 'A Node child process instance.',
       moreInfoUrl: 'https://nodejs.org/api/child_process.html#child_process_class_childprocess',
       extendedDescription: 'By the time it is returned, a no-op `error` listener has already been bound to prevent accidental crashing in the event of an unexpected error.',
-      example: '===',
+      outputExample: '===',
     },
 
   },

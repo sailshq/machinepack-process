@@ -20,14 +20,13 @@ module.exports = {
   inputs: {
 
     command: {
-      friendlyName: 'Command',
       description: 'The command to run, including any whitespace-delimited CLI args/opts.',
       example: 'ls -la',
       required: true
     },
 
     dir: {
-      friendlyName: 'Run from...',
+      friendlyName: 'Working directory',
       description: 'The path to the directory where this command will be run.',
       extendedDescription: 'If not set, this defaults to the present working directory.  If a relative path is provided, it will be resolved relative to the present working directory.',
       example: '/Users/mikermcneil/foo'
@@ -41,7 +40,6 @@ module.exports = {
     },
 
     timeout: {
-      friendlyName: 'Timeout',
       description: 'The maximum number of miliseconds to wait for this command to finish.',
       extendedDescription: 'By default, no time limit will be enforced.  Note that if the time limit is reached, SIGERM will be sent to the child process.',
       example: 60000
@@ -52,35 +50,33 @@ module.exports = {
 
   exits: {
 
+    success: {
+      outputFriendlyName: 'Command output',
+      outputDescription: 'The output returned from executing the command.',
+      extendedDescription: 'Note that the output is split into that which came from "stdout" vs. that which came from "stderr".',
+      outputExample: {
+        stdout: '...',
+        stderr: '...'
+      },
+    },
+
     notADir: {
-      friendlyName: 'not a directory',
+      friendlyName: 'Not a directory',
       description: 'The specified path points to a something which is not a directory (e.g. a file or shortcut).'
     },
 
     forbidden: {
-      friendlyName: 'forbidden',
-      description: 'Insufficient permissions to spawn process from the specified path (i.e. you might need to use `chown`/`chmod`)'
+      description: 'Insufficient permissions to spawn process from the specified path (i.e. you might need to use `chown`/`chmod`).'
     },
 
     noSuchDir: {
-      friendlyName: 'no such directory',
+      friendlyName: 'No such directory',
       description: 'Cannot run process from the specified path because no such directory exists.'
     },
 
     timedOut: {
-      friendlyName: 'Timed out',
       description: 'The specified command was automatically killed because it had not finished before the configured time limit (`timeout`).',
       extendedDescription: 'Note that the command _may have already caused side effects_ before it was stopped.'
-    },
-
-    success: {
-      variableName: 'bufferedOutput',
-      outputDescription: 'The output returned from executing the command.',
-      extendedDescription: 'Note that the output is split into that which came from "stdout" vs. that which came from "stderr". ',
-      example: {
-        stdout: '...',
-        stderr: '...'
-      },
     },
 
   },

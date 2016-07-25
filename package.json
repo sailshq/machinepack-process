@@ -17,7 +17,7 @@
     "lodash.isobject": "3.0.2",
     "lodash.isstring": "4.0.1",
     "lodash.isundefined": "3.0.1",
-    "machine": "~12.1.0",
+    "machine": "^12.3.0",
     "machinepack-json": "~2.0.0",
     "open": "0.0.5"
   },

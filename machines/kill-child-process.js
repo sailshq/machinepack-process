@@ -16,7 +16,6 @@ module.exports = {
   inputs: {
 
     childProcess: {
-      friendlyName: 'Child process',
       description: 'The child process to kill.',
       example: '===',
       required: true
@@ -31,6 +30,7 @@ module.exports = {
     },
 
     maxMsToWait: {
+      friendlyName: 'Timeout',
       description: 'The maximum number of miliseconds to wait for the child process to shut down gracefully.',
       example: 500,
       defaultsTo: 500
@@ -41,9 +41,15 @@ module.exports = {
 
   exits: {
 
+    success: {
+      description: 'The child process was killed successfully.',
+      outputDescription: 'Whether or not the child process had to be force-killed with "SIGKILL".',
+      outputFriendlyName: 'Was force killed',
+      outputExample: false
+    },
+
     invalidChildProcess: {
-      friendlyName: 'Invalid child process',
-      description: 'The specified value is not a valid child process instance.',
+      description: 'The specified value was not a valid child process instance.',
       extendedDescription: 'You can obtain a child process instance by calling `spawnChildProcess()`.'
     },
 
@@ -53,13 +59,6 @@ module.exports = {
         'It might be refusing to close, it might already finished running, or it might even never have been alive.'+
         'To force-kill it using SIGKILL (e.g. `kill -9`), run this machine again with `force: true`.',
     },
-
-    success: {
-      description: 'The child process has been killed successfully.',
-      outputDescription: 'Whether or not the child process had to be force-killed with "SIGKILL".',
-      outputVariableName: 'wasForceKilled',
-      example: false
-    }
 
   },
 

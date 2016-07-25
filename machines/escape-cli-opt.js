@@ -1,7 +1,7 @@
 module.exports = {
 
 
-  friendlyName: 'Escape CLI opt',
+  friendlyName: 'Escape CLI option',
 
 
   description: 'Escape a value for use as a command-line option (e.g. the "XXXXX" in `--foobar=\'XXXXX\'`).',
@@ -12,7 +12,7 @@ module.exports = {
     'For instance `--foo=\'RESULT_FROM_THIS_MACHINE_HERE\'`  or `-f \'RESULT_FROM_THIS_MACHINE_HERE\'',
 
 
-  cacheable: true,
+  sideEffects: 'cacheable',
 
 
   sync: true,
@@ -21,7 +21,6 @@ module.exports = {
   inputs: {
 
     value: {
-      friendlyName: 'Value',
       description: 'The value to escape as a CLI option.',
       example: '*',
       required: true
@@ -32,14 +31,14 @@ module.exports = {
 
   exits: {
 
-    couldNotSerialize: {
-      description: 'The provided value could not be serialized into a JSON string.'
+    success: {
+      outputFriendlyName: 'Escaped CLI option',
+      outputExample: '{"foo":"bar"}',
+      outputDescription: 'The escaped value ready for use as a CLI option.',
     },
 
-    success: {
-      variableName: 'escaped',
-      example: '{"foo":"bar"}',
-      description: 'Done.',
+    couldNotSerialize: {
+      description: 'The provided value could not be serialized into a JSON string.'
     },
 
   },
