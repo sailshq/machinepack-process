@@ -22,7 +22,7 @@ module.exports = {
 
     value: {
       description: 'The value to escape as a CLI option.',
-      example: '*',
+      example: '===',
       required: true
     },
 
@@ -59,17 +59,23 @@ module.exports = {
     // If this is a dictionary/array, then JSON stringify it.
     var val = inputs.value;
     if (isObject(val)) {
-      val = MPJSON.stringifySafe({value:val}).execSync();
+      // Attempt to stringify the value.
+      try {
+        val = MPJSON.stringifySafe({value:val}).execSync();
+      }
+      catch (e) {
+        // If we couldn't stringify the value, exit through the `couldNotSerialize` exit.
+        if (e.code === 'E_MACHINE_RUNTIME_VALIDATION') {
+          return exits.couldNotSerialize();
+        }
+        // If some other error occurred while trying to stringify, forward it
+        // through our `error` exit.
+        return exits.error(e);
+      }
     }
     // Otherwise, cast it to a string.
     else {
       val = val+'';
-    }
-
-    // If we couldn't serialize the value, exit through the `couldNotSerialize` exit.
-    // TODO -- do we need this code/exit, considering the input is `*`?
-    if (!isString(val)) {
-      return exits.couldNotSerialize();
     }
 
     // Now escape the resulting string as a CLI option.
