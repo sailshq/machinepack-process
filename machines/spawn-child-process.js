@@ -68,21 +68,27 @@ module.exports = {
 
 
   fn: function (inputs,exits) {
+
+    // Import `path`.
     var path = require('path');
+
+    // Import `child_process.spawn`.
     var spawn = require('child_process').spawn;
+
+    // Import the `isUndefined` Lodash function.
     var isUndefined = require('lodash.isundefined');
 
     // First, build up the options to pass in to `child_process.spawn()`.
     var childProcOpts = {};
 
-    // Determine the appropriate `cwd` for `child_process.spawn()`.
+    // Determine the appropriate `cwd` for `child_process.exec()`.
     if (isUndefined(inputs.dir)) {
       // Default directory to current working directory
       childProcOpts.cwd = process.cwd();
     }
     else {
-      // (or if a `dir` was specified, resolve it to make sure
-      //  it's an absolute path.)
+      // If a `dir` was specified, resolve it to make sure
+      // it's an absolute path.
       childProcOpts.cwd = path.resolve(inputs.dir);
     }
 
@@ -95,7 +101,7 @@ module.exports = {
     var liveChildProc = spawn(inputs.command, inputs.cliArgs, childProcOpts);
     liveChildProc.on('error', function wheneverAnErrorIsEmitted(err){ /* ... */ });
 
-    // Return live child process.
+    // Return live child process through the `success` exit.
     return exits.success(liveChildProc);
   },
 

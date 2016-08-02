@@ -11,7 +11,9 @@ module.exports = {
   'This uses the `child_process.exec()` method from Node.js core to run the specified command. '+
   'The success exit from this machine will not be called until the command has finished running (i.e. the resulting child process exits). '+
   'If you need a more advanced/flexible interface, check out `spawnChildProcess()`.  It is much lower-level, and exposes raw access to the '+
-  'child process instance.',
+  'child process instance. Also note that only errors which can be reliably determined cross-platform are included in this machine. '+
+  'On *nix platforms (including OS X), you may be able to examine the `code` property of the object passed through the `erro` exit '+
+  'to determine the specific cause of an error (e.g. 127 for "command not found" or 126 for "command not executable").',
 
 
   moreInfoUrl: 'https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback',
@@ -62,16 +64,17 @@ module.exports = {
 
     notADir: {
       friendlyName: 'Not a directory',
-      description: 'The specified path points to a something which is not a directory (e.g. a file or shortcut).'
+      description: 'The specified path for the working directory points to a something which is not a directory (e.g. a file or shortcut).'
     },
 
     forbidden: {
-      description: 'Insufficient permissions to spawn process from the specified path (i.e. you might need to use `chown`/`chmod`).'
+      description: 'The user running the machine had insufficient permissions to spawn process from the specified path.',
+      extendedDescription: 'You might need to use `chown`/`chmod` to alter the permissions for the executable!'
     },
 
     noSuchDir: {
       friendlyName: 'No such directory',
-      description: 'Cannot run process from the specified path because no such directory exists.'
+      description: 'No directory could be found at the specified path for the working directory.'
     },
 
     timedOut: {
@@ -83,8 +86,12 @@ module.exports = {
 
 
   fn: function (inputs,exits) {
+
+    // Import `util` and `child_process.exec`
     var path = require('path');
     var executeCmdInChildProc = require('child_process').exec;
+
+    // Import `isObject` and `isUndefined` Lodash functions.
     var isObject = require('lodash.isobject');
     var isUndefined = require('lodash.isundefined');
 
@@ -97,19 +104,24 @@ module.exports = {
       childProcOpts.cwd = process.cwd();
     }
     else {
-      // (or if a `dir` was specified, resolve it to make sure
-      //  it's an absolute path.)
+      // If a `dir` was specified, resolve it to make sure
+      // it's an absolute path.
       childProcOpts.cwd = path.resolve(inputs.dir);
     }
 
-    // If `timeout` was provided, pass it in to `child_process.exec()`.
-    // Note that we also track a timestamp (epoch ms) for use in negotiating errors below.
+    // Declare a var for holding the current timestamp, if a timeout was provided.
     var timestampBeforeExecutingCmd;
+
+    // If `timeout` was provided...
     if (!isUndefined(inputs.timeout)) {
+
+      // If the timeout < 1 millisecond, return a validation error through our `error` exit.
       if (inputs.timeout < 1) {
         return exits.error('Invalid timeout (`'+inputs.timeout+'`).  Must be greater than zero.  Remember: `timeout` should be used to indicate the maximum number of miliseconds to wait for this command to finish before giving up.');
       }
+      // Otherwise add the specified timeout as an option to the `exec` command.
       childProcOpts.timeout = inputs.timeout;
+      // Record the current time so we can have an idea later if the executable timed out.
       timestampBeforeExecutingCmd = (new Date()).getTime();
     }
 
@@ -120,12 +132,10 @@ module.exports = {
 
 
 
-    // Now spawn the child process.
+    // Now spawn the child process using the options that were passed in.
     var liveChildProc = executeCmdInChildProc(inputs.command, childProcOpts, function onClose(err, bufferedStdout, bufferedStderr) {
+      // If an error occurred...
       if (err) {
-        if (!isObject(err)) {
-          return exits.error(err);
-        }
         // console.log('err=>',err);
         // console.log('keys=>',Object.keys(err));
         // console.log('err.code=>',err.code);
@@ -134,29 +144,48 @@ module.exports = {
         // console.log('err.errno=>',err.errno); // e.g. 127 || 'ENOENT'
         // console.log('err.signal=>',err.signal); // e.g. 'SIGTERM'
 
+        // If it's not an object, we don't know how to handle it, so pass it straight through
+        // the `error` exit.
         // `err.syscall.match(/spawn/i)` should be true as well, but not testing since
         // Node v0.12 changed this a bit and we want to future-proof ourselves if possible.
+        if (!isObject(err)) {
+          return exits.error(err);
+        }
+
+        // If we get an `ENOTDIR` error, it means the specified working directory
+        // was invalid, so leave through the `notADir` exit.
         if (err.code==='ENOTDIR') {
           return exits.notADir();
         }
+
+        // If we get an `ENOENT` error, it means the specified working directory
+        // did not exist, so leave through the `noSuchDir` exit.
         if (err.code==='ENOENT') {
           return exits.noSuchDir();
         }
+
+        // If we get an `ENOENT` error, it means that the user running the machine
+        // had insufficient permissions to run the command, so leave through
+        // the `forbidden` exit.
         if (err.code==='EACCES') {
           return exits.forbidden();
         }
 
         // Check to see if this error is because of the configured timeout.
         if (err.signal==='SIGTERM' && inputs.timeout) {
+          // If so, leave through the `timedOut` exit.
           var msElapsed = (new Date()).getTime() - timestampBeforeExecutingCmd;
           if (msElapsed >= inputs.timeout) {
             return exits.timedOut();
           }
         }
+
+        // Forward all other errors through the `error` exit.
         return exits.error(err);
       }
 
-      // console.log('Child process exited with exit code ' + code);
+      // Process exited successfully (exit code 0), so leave through the `success` exit,
+      // using the buffered output.
       return exits.success({
         stdout: bufferedStdout,
         stderr: bufferedStderr

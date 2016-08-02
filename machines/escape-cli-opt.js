@@ -45,9 +45,15 @@ module.exports = {
 
 
   fn: function (inputs,exits) {
+
+    // Import `util`.
     var util = require('util');
+
+    // Import `isObject` and `isString` Lodash functions.
     var isObject = require('lodash.isobject');
     var isString = require('lodash.isstring');
+
+    // Import `machinepack-json`.
     var MPJSON = require('machinepack-json');
 
     // If this is a dictionary/array, then JSON stringify it.
@@ -60,6 +66,8 @@ module.exports = {
       val = val+'';
     }
 
+    // If we couldn't serialize the value, exit through the `couldNotSerialize` exit.
+    // TODO -- do we need this code/exit, considering the input is `*`?
     if (!isString(val)) {
       return exits.couldNotSerialize();
     }
@@ -67,6 +75,7 @@ module.exports = {
     // Now escape the resulting string as a CLI option.
     val = val.replace(/'/g,'\'\\\'\'');
 
+    // Return the result through the `success` exit.
     return exits.success(val);
   },
 

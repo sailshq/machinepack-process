@@ -21,8 +21,14 @@ module.exports = {
 
 
   fn: function (inputs, exits){
+
+    // Import `open` and `openBrowserAndNavigateToUrl`.
     var openBrowserAndNavigateToUrl = require('open');
+
+    // Attempt to open the given URL in a browser window.
     openBrowserAndNavigateToUrl(inputs.url);
+
+    // Return through the `success` exit.
     return exits.success();
   }
 

@@ -44,7 +44,7 @@ module.exports = {
     success: {
       description: 'The child process was killed successfully.',
       outputDescription: 'Whether or not the child process had to be force-killed with "SIGKILL".',
-      outputFriendlyName: 'Was force killed',
+      outputFriendlyName: 'Was force killed?',
       outputExample: false
     },
 
@@ -69,6 +69,7 @@ module.exports = {
 
     // Validate that the provided child process instance is at least close to the real deal.
     if (!isObject(inputs.childProcess) || !isFunction(inputs.childProcess.kill) || !isFunction(inputs.childProcess.on) || !isFunction(inputs.childProcess.removeListener)) {
+      // If not, leave through the `invalidChildProcess` exit.
       return exits.invalidChildProcess();
     }
 
@@ -100,16 +101,24 @@ module.exports = {
     // Define a function (`forceKillOrGiveUp`) that will be called if the graceful shutdown attempt fails.
     forceKillOrGiveUp = function (){
       try {
+        // Remove the `close` listener from the child process, so that it's not called later
+        // if that signal comes in belatedly.
         inputs.childProcess.removeListener('close', handleClosingChildProc);
 
+        // If `forceIfNecessary` is on, attempt to send a SIGKILL to the process,
+        // and return through the `success` exit with a `true` value indicating that
+        // the process was force-killed.
         if (inputs.forceIfNecessary) {
           inputs.childProcess.kill('SIGKILL');
           return exits.success(true);
         }
+        // Otherwise exit through `couldNotKill`.
         else {
           return exits.couldNotKill();
         }
       }
+      // If any errors occurred attempting to clean up the process, forward them through
+      // the `error` exit.
       catch (e) {
         return exits.error(e);
       }
@@ -118,14 +127,16 @@ module.exports = {
     // Define a function (`handleClosingChildProc`) that will be called when/if we receive a message
     // indicating that the child process has closed.
     handleClosingChildProc = function (code, signal) {
+      // Ignore SIGKILL.
+      // (if we're seeing it here, it came from somewhere else, and we don't want to get confused).
       if (signal === 'SIGKILL') {
-        // Ignore SIGKILL
-        // (if we're seeing it here, it came from somewhere else, and we don't want to get confused)
         return;
       }
+
+      // Clear the timeout timer.
       clearTimeout(timer);
 
-      // Graceful kill successful!
+      // Graceful kill successful!  Return `false` through the `success` exit to indicate a graceful shutdown.
       return exits.success(false);
     };
 
@@ -151,7 +162,7 @@ module.exports = {
     // Set a timer.
     // (If the child process has not closed gracefully after `inputs.maxMsToWait`,
     //  then we need to either force kill it with SIGKILL, or fail via the
-    //  `couldNotKill` exit.)
+    //  `couldNotKill` exit).
     timer = setTimeout(forceKillOrGiveUp, inputs.maxMsToWait);
 
 
