@@ -13,6 +13,9 @@ module.exports = {
   moreInfoUrl: 'https://nodejs.org/api/child_process.html#child_process_child_kill_signal',
 
 
+  sideEffects: 'idempotent',
+
+
   inputs: {
 
     childProcess: {
