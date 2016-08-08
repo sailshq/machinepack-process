@@ -64,7 +64,7 @@ module.exports = {
 
     notADir: {
       friendlyName: 'Not a directory',
-      description: 'The specified path for the working directory points to a something which is not a directory (e.g. a file or shortcut).'
+      description: 'The specified path for the working directory pointed to something which is not a directory (e.g. a file or shortcut).'
     },
 
     forbidden: {

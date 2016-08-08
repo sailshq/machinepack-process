@@ -24,7 +24,7 @@ module.exports = {
     forceIfNecessary: {
       friendlyName: 'Force if necessary?',
       description: 'If set, then force the child process to exit if it cannot be killed gracefully (e.g. because it is already dead).',
-      extendedDescription: 'If set, this method will first attempt to shut down the child process gracefully (SIGTERM); but if that doesn\'t work after a few miliseconds (`maxMsToWait`), it will use the nuclear option (SIGKILL) to kill the child process with no exceptions.',
+      extendedDescription: 'If set, this method will first attempt to shut down the child process gracefully (SIGTERM); but if that doesn\'t work after a few milliseconds (`maxMsToWait`), it will use the nuclear option (SIGKILL) to kill the child process with no exceptions.',
       example: false,
       defaultsTo: false
     },
