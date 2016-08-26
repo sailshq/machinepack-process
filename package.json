@@ -1,6 +1,6 @@
 {
   "name": "machinepack-process",
-  "version": "2.0.2",
+  "version": "3.0.0-1",
   "description": "Work with child procs and the running process.",
   "scripts": {
     "test": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js && ./node_modules/mocha/bin/mocha tests/*.js --timeout 5000 --slow 2000"
@@ -17,25 +17,25 @@
     "lodash.isobject": "3.0.2",
     "lodash.isstring": "4.0.1",
     "lodash.isundefined": "3.0.1",
-    "machine": "^12.3.0",
+    "machine": "^13.0.0-7",
     "machinepack-json": "~2.0.0",
     "open": "0.0.5"
   },
   "devDependencies": {
-    "async": "1.5.2",
-    "lodash": "3.9.2",
-    "mocha": "2.4.5",
-    "test-machinepack-mocha": "^2.1.1"
+    "async": "2.0.1",
+    "lodash": "3.10.1",
+    "mocha": "3.0.2",
+    "test-machinepack-mocha": "^2.1.7"
   },
   "machinepack": {
     "friendlyName": "Process",
     "machineDir": "machines/",
     "machines": [
       "open-browser",
-      "escape-cli-opt",
       "kill-child-process",
       "spawn-child-process",
-      "execute-command"
+      "execute-command",
+      "escape-as-command-line-opt"
     ],
     "testsUrl": "https://travis-ci.org/treelinehq/machinepack-process"
   },
