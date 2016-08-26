@@ -31,8 +31,8 @@ module.exports = {
     },
 
     cliArgs: {
-      friendlyName: 'CLI args',
-      description: 'An array of command-line arguments (e.g. `commit` or `install`) and/or options (e.g. `-al` or `-f 7` or `--foo=\'bar\'`) to pass in.',
+      friendlyName: 'CLI args/opts',
+      description: 'An array of serial command-line arguments (e.g. `commit` or `install`) and/or options (e.g. `-al` or `-f 7` or `--foo=\'bar\'`) to pass in.',
       example: ['-la'],
       defaultsTo: []
     },
