@@ -83,8 +83,7 @@ module.exports = {
 
     // Return the result through the `success` exit.
     return exits.success(val);
-  },
-
+  }
 
 
 };

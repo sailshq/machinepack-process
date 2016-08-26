@@ -17,7 +17,7 @@
     "lodash.isobject": "3.0.2",
     "lodash.isstring": "4.0.1",
     "lodash.isundefined": "3.0.1",
-    "machine": "^12.3.0",
+    "machine": "^13.0.0-7",
     "machinepack-json": "~2.0.0",
     "open": "0.0.5"
   },
@@ -32,10 +32,10 @@
     "machineDir": "machines/",
     "machines": [
       "open-browser",
-      "escape-cli-opt",
       "kill-child-process",
       "spawn-child-process",
-      "execute-command"
+      "execute-command",
+      "escape-as-command-line-opt"
     ],
     "testsUrl": "https://travis-ci.org/treelinehq/machinepack-process"
   },
