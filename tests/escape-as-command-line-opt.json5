@@ -8,7 +8,7 @@
         "value": 4
       },
       "outcome": "success",
-      "returns": "\"4\""
+      "returns": "4"
     },
 
     // Boolean
@@ -17,7 +17,7 @@
         "value": true
       },
       "outcome": "success",
-      "returns": "\"true\""
+      "returns": "true"
     },
 
     // Null
@@ -26,7 +26,7 @@
         "value": null
       },
       "outcome": "success",
-      "returns": "\"null\""
+      "returns": "null"
     },
 
     // String with nasty single quotes everywhere
