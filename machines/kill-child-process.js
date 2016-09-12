@@ -67,11 +67,12 @@ module.exports = {
 
 
   fn: function (inputs,exits) {
-    var isObject = require('lodash.isobject');
-    var isFunction = require('lodash.isfunction');
+
+    // Import `lodash`.
+    var _ = require('lodash');
 
     // Validate that the provided child process instance is at least close to the real deal.
-    if (!isObject(inputs.childProcess) || !isFunction(inputs.childProcess.kill) || !isFunction(inputs.childProcess.on) || !isFunction(inputs.childProcess.removeListener)) {
+    if (!_.isObject(inputs.childProcess) || !_.isFunction(inputs.childProcess.kill) || !_.isFunction(inputs.childProcess.on) || !_.isFunction(inputs.childProcess.removeListener)) {
       // If not, leave through the `invalidChildProcess` exit.
       return exits.invalidChildProcess();
     }

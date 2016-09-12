@@ -91,15 +91,14 @@ module.exports = {
     var path = require('path');
     var executeCmdInChildProc = require('child_process').exec;
 
-    // Import `isObject` and `isUndefined` Lodash functions.
-    var isObject = require('lodash.isobject');
-    var isUndefined = require('lodash.isundefined');
+    // Import `lodash`.
+    var _ = require('lodash');
 
     // First, build up the options to pass in to `child_process.exec()`.
     var childProcOpts = {};
 
     // Determine the appropriate `cwd` for `child_process.exec()`.
-    if (isUndefined(inputs.dir)) {
+    if (_.isUndefined(inputs.dir)) {
       // Default directory to current working directory
       childProcOpts.cwd = process.cwd();
     }
@@ -113,7 +112,7 @@ module.exports = {
     var timestampBeforeExecutingCmd;
 
     // If `timeout` was provided...
-    if (!isUndefined(inputs.timeout)) {
+    if (!_.isUndefined(inputs.timeout)) {
 
       // If the timeout < 1 millisecond, return a validation error through our `error` exit.
       if (inputs.timeout < 1) {
@@ -126,7 +125,7 @@ module.exports = {
     }
 
     // If `environmentVars` were provided, pass them in to `child_process.exec()`.
-    if (!isUndefined(inputs.environmentVars)) {
+    if (!_.isUndefined(inputs.environmentVars)) {
       childProcOpts.env = inputs.environmentVars;
     }
 
@@ -148,7 +147,7 @@ module.exports = {
         // the `error` exit.
         // `err.syscall.match(/spawn/i)` should be true as well, but not testing since
         // Node v0.12 changed this a bit and we want to future-proof ourselves if possible.
-        if (!isObject(err)) {
+        if (!_.isObject(err)) {
           return exits.error(err);
         }
 

@@ -13,17 +13,13 @@
   "author": "Mike McNeil",
   "license": "MIT",
   "dependencies": {
-    "lodash.isfunction": "3.0.8",
-    "lodash.isobject": "3.0.2",
-    "lodash.isstring": "4.0.1",
-    "lodash.isundefined": "3.0.1",
+    "lodash": "3.10.1",
     "machine": "^13.0.0-7",
     "machinepack-json": "~2.0.0",
     "open": "0.0.5"
   },
   "devDependencies": {
     "async": "2.0.1",
-    "lodash": "3.10.1",
     "mocha": "3.0.2",
     "test-machinepack-mocha": "^2.1.7"
   },
