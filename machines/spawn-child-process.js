@@ -93,8 +93,12 @@ module.exports = {
     }
 
     // If `environmentVars` were provided, pass them in to `child_process.exec()`.
+    // (Otherwise, by default, the child process receives the parent process's `process.env`)
     if (!_.isUndefined(inputs.environmentVars)) {
-      childProcOpts.env = inputs.environmentVars;
+      // Notice that we carefully expose parent process's env variables to the
+      // child process's environment, while still letting the deliberately passed-in
+      // `evironmentVars` take precedence.
+      childProcOpts.env = _.extend({}, process.env, inputs.environmentVars);
     }
 
     // Then spawn the child process and set up a no-op error listener to prevent crashing.
