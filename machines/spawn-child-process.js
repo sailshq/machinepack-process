@@ -97,7 +97,7 @@ module.exports = {
     if (!_.isUndefined(inputs.environmentVars)) {
       // Notice that we carefully expose parent process's env variables to the
       // child process's environment, while still letting the deliberately passed-in
-      // `evironmentVars` take precedence.
+      // `environmentVars` take precedence.
       childProcOpts.env = _.extend({}, process.env, inputs.environmentVars);
     }
 
