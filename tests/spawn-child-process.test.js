@@ -2,6 +2,7 @@
  * Module dependencies
  */
 
+var assert = require('assert');
 var _ = require('lodash');
 var async = require('async');
 var Pack = require('../');
@@ -26,6 +27,69 @@ describe('spawnChildProcess()', function (){
       childProc = _childProc;
       childProc.once('error', function whenFirstErrorIsEmitted(err){ return done(err); });
       return done();
+    });
+
+    after(function (done) {
+      if (!childProc) { return done(); }
+
+      Pack.killChildProcess({
+        childProcess: childProc,
+        forceIfNecessary: true
+      }).exec(done);
+    });
+  });
+
+
+
+  describe('when providing env vars', function(){
+    var childProc;
+
+    it('should still have access to env of parent process', function (done){
+
+      // Set a couple of env vars in parent process.
+      process.env.foobar = 'gee';
+      process.env.beep = 'boop';
+
+      // Used below for double-checking that we didn't inadvertentely corrupt
+      // the parent process's environment.
+      var envVarsBackup = _.cloneDeep(process.env);
+
+      // Used below for verifying that the child proc had access to
+      // the expected env vars.
+      var conglomeratedBufferedStdout = '';
+
+      // Now spawn child proc.
+      var _childProc = Pack.spawnChildProcess({
+        command: 'node',
+        cliArgs: ['-e', 'console.log(process.env.foobar + \' \' + process.env.baz + process.env.beep);'],
+        environmentVars: {
+          baz: 'williker',
+          beep: 's' // << to override the `beep` env var we set in our parent proc
+        }
+      }).execSync();
+      childProc = _childProc;
+      childProc.once('error', function whenFirstErrorIsEmitted(err){ return done(err); });
+
+      // Receive output from the child process.
+      childProc.stdout.on('data', function onStdoutData(tastyBytes){
+        conglomeratedBufferedStdout += tastyBytes.toString();
+      });
+
+      // Wait for the child process to finish.
+      childProc.on('close', function (){
+
+        // Verify that `process.env` of parent process was not damaged.
+        try { assert.deepEqual(envVarsBackup, process.env); }
+        catch (e) { return done(e); }
+
+        // If the child process logged "gee willikers\n", then that means it had access to both the env vars
+        // that were specially passed in, AS WELL AS of its parent process.  It also means that it properly
+        // overrode parent env vars with those that were explicitly passed in.
+        try { assert.strictEqual('gee willikers\n', conglomeratedBufferedStdout); }
+        catch (e) { return done(e); }
+
+        return done();
+      });
     });
 
     after(function (done) {

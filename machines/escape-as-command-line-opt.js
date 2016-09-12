@@ -61,8 +61,8 @@ module.exports = {
     // Import `util`.
     var util = require('util');
 
-    // Import `isString` Lodash function.
-    var isString = require('lodash.isstring');
+    // Import `lodash`.
+    var _ = require('lodash');
 
     // Import `machinepack-json`.
     var MPJSON = require('machinepack-json');
@@ -71,7 +71,7 @@ module.exports = {
     // First, determine the string to escape.
     var stringToEscape;
     // If this is a string, we'll use it verbatim.
-    if (isString(inputs.value)) {
+    if (_.isString(inputs.value)) {
       stringToEscape = inputs.value;
     }
     // But otherwise, attempt to JSON stringify it before escaping.

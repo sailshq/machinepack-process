@@ -75,14 +75,14 @@ module.exports = {
     // Import `child_process.spawn`.
     var spawn = require('child_process').spawn;
 
-    // Import the `isUndefined` Lodash function.
-    var isUndefined = require('lodash.isundefined');
+    // Import `lodash`.
+    var _ = require('lodash');
 
     // First, build up the options to pass in to `child_process.spawn()`.
     var childProcOpts = {};
 
     // Determine the appropriate `cwd` for `child_process.exec()`.
-    if (isUndefined(inputs.dir)) {
+    if (_.isUndefined(inputs.dir)) {
       // Default directory to current working directory
       childProcOpts.cwd = process.cwd();
     }
@@ -93,8 +93,12 @@ module.exports = {
     }
 
     // If `environmentVars` were provided, pass them in to `child_process.exec()`.
-    if (!isUndefined(inputs.environmentVars)) {
-      childProcOpts.env = inputs.environmentVars;
+    // (Otherwise, by default, the child process receives the parent process's `process.env`)
+    if (!_.isUndefined(inputs.environmentVars)) {
+      // Notice that we carefully expose parent process's env variables to the
+      // child process's environment, while still letting the deliberately passed-in
+      // `environmentVars` take precedence.
+      childProcOpts.env = _.extend({}, process.env, inputs.environmentVars);
     }
 
     // Then spawn the child process and set up a no-op error listener to prevent crashing.
