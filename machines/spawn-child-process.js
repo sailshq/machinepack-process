@@ -25,7 +25,7 @@ module.exports = {
 
     command: {
       description: 'The command to run in the child process, without any CLI arguments or options.',
-      extendedDescription: 'Node core is tolerant of CLI args mixed in with the main "command" in `child_process.exec()`, but it is not so forgiving when using `child_process.spawn()`.',
+      extendedDescription: 'Node core is tolerant of CLI args mixed in with the main "command" in `child_process.exec()`, but it is not so forgiving when using `child_process.spawn()`.  That means you cannot provide a command like "git commit" this way.  Instead, provide "git" as the command and `["commit"]` as the CLI args.',
       example: 'ls',
       required: true
     },
@@ -78,7 +78,14 @@ module.exports = {
     // Import `lodash`.
     var _ = require('lodash');
 
-    // First, build up the options to pass in to `child_process.spawn()`.
+    // First, validate that the provided command is valid.
+    // `child_process.spawn()` has some pretty harsh limitations here,
+    // and since this interface is so low level, it's really easy to mess up.
+    if (inputs.command.match(/\s/)) {
+      return exits.error(new Error('The string provided to spawnChildProcess() for the `command` input ("'+inputs.command+'") is not valid.  Unlike `executeCommand()` (the simpler, higher-level machine), the `command` provided to `spawnChildProcess()` should never contain spaces!  To spawn a child process with a command like `git commit`, send in "git" as the command, and `["commit", "-am", "foo"]` as the CLI args.'));
+    }
+
+    // Now build up the options to pass in to `child_process.spawn()`.
     var childProcOpts = {};
 
     // Determine the appropriate `cwd` for `child_process.exec()`.
