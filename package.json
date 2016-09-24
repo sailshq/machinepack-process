@@ -1,6 +1,6 @@
 {
   "name": "machinepack-process",
-  "version": "3.0.0-2",
+  "version": "3.0.0-3",
   "description": "Work with child procs and the running process.",
   "scripts": {
     "test": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js && ./node_modules/mocha/bin/mocha tests/*.js --timeout 5000 --slow 2000"
