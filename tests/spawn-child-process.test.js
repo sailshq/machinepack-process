@@ -142,13 +142,44 @@ describe('spawnChildProcess()', function (){
 
 
 
+  describe('if spaces are used in the command', function (){
+    this.slow(1500);
+
+    var childProc;
+    it('should fail with an error', function (done){
+
+      try {
+        childProc = Pack.spawnChildProcess({
+          command: 'blah blah, space separated args arent allowed see',
+        }).execSync();
+      }
+      catch (e) {
+        return done();
+      }
+
+      return done(new Error('Should have failed w/ an error!'));
+    });
+
+    after(function (done) {
+      if (!childProc) { return done(); }
+
+      Pack.killChildProcess({
+        childProcess: childProc,
+        forceIfNecessary: true
+      }).exec(done);
+    });
+
+  });//</if spaces are used in the command>
+
+
   describe('if the child process emits an error', function (){
     this.slow(1500);
 
     var childProc;
     it('should not crash the process', function (done){
       childProc = Pack.spawnChildProcess({
-        command: 'blah blah, space separated args arent allowed see, so this will be emitting errors for sure!!!!',
+        command: 'node',
+        cliArgs: ['-e', 'throw new Error(\'oops\');'],
       }).execSync();
       // We wait another few moments just to be 100% sure.
       setTimeout(function (){
