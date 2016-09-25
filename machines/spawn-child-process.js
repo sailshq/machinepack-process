@@ -108,9 +108,18 @@ module.exports = {
       childProcOpts.env = _.extend({}, process.env, inputs.environmentVars);
     }
 
-    // Then spawn the child process and set up a no-op error listener to prevent crashing.
+    // Then spawn the child process.
     var liveChildProc = spawn(inputs.command, inputs.cliArgs, childProcOpts);
-    liveChildProc.on('error', function wheneverAnErrorIsEmitted(err){ /* ... */ });
+
+    // Set up a no-op error listener to prevent crashing.
+    var wheneverAnErrorIsEmitted = function (err){ /* ... */ };
+    liveChildProc.on('error', wheneverAnErrorIsEmitted);
+
+    // But because we're binding that no-op error listener, we'll also need to bind
+    // a one-time-use `close` listener; purely to _unbind_ our `error` listener.
+    liveChildProc.once('close', function (){
+      liveChildProc.removeListener('error', wheneverAnErrorIsEmitted);
+    });
 
     // Return live child process through the `success` exit.
     return exits.success(liveChildProc);
