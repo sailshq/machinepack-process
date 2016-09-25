@@ -25,7 +25,7 @@ module.exports = {
 
     command: {
       description: 'The command to run in the child process, without any CLI arguments or options.',
-      extendedDescription: 'Node core is tolerant of CLI args mixed in with the main "command" in `child_process.exec()`, but it is not so forgiving when using `child_process.spawn()`.',
+      extendedDescription: 'Node core is tolerant of CLI args mixed in with the main "command" in `child_process.exec()`, but it is not so forgiving when using `child_process.spawn()`.  That means you cannot provide a command like "git commit" this way.  Instead, provide "git" as the command and `["commit"]` as the CLI args.',
       example: 'ls',
       required: true
     },
@@ -78,7 +78,14 @@ module.exports = {
     // Import `lodash`.
     var _ = require('lodash');
 
-    // First, build up the options to pass in to `child_process.spawn()`.
+    // First, validate that the provided command is valid.
+    // `child_process.spawn()` has some pretty harsh limitations here,
+    // and since this interface is so low level, it's really easy to mess up.
+    if (inputs.command.match(/\s/)) {
+      return exits.error(new Error('The string provided to spawnChildProcess() for the `command` input ("'+inputs.command+'") is not valid.  Unlike `executeCommand()` (the simpler, higher-level machine), the `command` provided to `spawnChildProcess()` should never contain spaces!  To spawn a child process with a command like `git commit`, send in "git" as the command, and `["commit", "-am", "foo"]` as the CLI args.'));
+    }
+
+    // Now build up the options to pass in to `child_process.spawn()`.
     var childProcOpts = {};
 
     // Determine the appropriate `cwd` for `child_process.exec()`.
@@ -101,9 +108,18 @@ module.exports = {
       childProcOpts.env = _.extend({}, process.env, inputs.environmentVars);
     }
 
-    // Then spawn the child process and set up a no-op error listener to prevent crashing.
+    // Then spawn the child process.
     var liveChildProc = spawn(inputs.command, inputs.cliArgs, childProcOpts);
-    liveChildProc.on('error', function wheneverAnErrorIsEmitted(err){ /* ... */ });
+
+    // Set up a no-op error listener to prevent crashing.
+    var wheneverAnErrorIsEmitted = function (err){ /* ... */ };
+    liveChildProc.on('error', wheneverAnErrorIsEmitted);
+
+    // But because we're binding that no-op error listener, we'll also need to bind
+    // a one-time-use `close` listener; purely to _unbind_ our `error` listener.
+    liveChildProc.once('close', function (){
+      liveChildProc.removeListener('error', wheneverAnErrorIsEmitted);
+    });
 
     // Return live child process through the `success` exit.
     return exits.success(liveChildProc);

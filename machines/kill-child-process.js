@@ -106,7 +106,7 @@ module.exports = {
     forceKillOrGiveUp = function (){
       try {
         // Remove the `close` listener from the child process, so that it's not called later
-        // if that signal comes in belatedly.
+        // if that signal comes in belatedly.  (And so we don't leave dangling listeners hanging around.)
         inputs.childProcess.removeListener('close', handleClosingChildProc);
 
         // If `forceIfNecessary` is on, attempt to send a SIGKILL to the process,
@@ -137,6 +137,10 @@ module.exports = {
         return;
       }
 
+      // Remove the `close` listener from the child process, so that we don't leave any
+      // event listeners dangling.
+      inputs.childProcess.removeListener('close', handleClosingChildProc);
+
       // Clear the timeout timer.
       clearTimeout(timer);
 
@@ -161,7 +165,7 @@ module.exports = {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Listen for the child process being closed.
-    inputs.childProcess.on('close', handleClosingChildProc);
+    inputs.childProcess.once('close', handleClosingChildProc);
 
     // Set a timer.
     // (If the child process has not closed gracefully after `inputs.maxMsToWait`,
