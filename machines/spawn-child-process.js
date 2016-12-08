@@ -88,7 +88,7 @@ module.exports = {
     // Now build up the options to pass in to `child_process.spawn()`.
     var childProcOpts = {};
 
-    // Determine the appropriate `cwd` for `child_process.exec()`.
+    // Determine the appropriate `cwd` for `child_process.spawn()`.
     if (_.isUndefined(inputs.dir)) {
       // Default directory to current working directory
       childProcOpts.cwd = process.cwd();
@@ -99,7 +99,7 @@ module.exports = {
       childProcOpts.cwd = path.resolve(inputs.dir);
     }
 
-    // If `environmentVars` were provided, pass them in to `child_process.exec()`.
+    // If `environmentVars` were provided, get ready to pass them in to `child_process.spawn()`.
     // (Otherwise, by default, the child process receives the parent process's `process.env`)
     if (!_.isUndefined(inputs.environmentVars)) {
       // Notice that we carefully expose parent process's env variables to the
