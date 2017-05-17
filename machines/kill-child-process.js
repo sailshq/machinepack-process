@@ -69,7 +69,7 @@ module.exports = {
   fn: function (inputs,exits) {
 
     // Import `lodash`.
-    var _ = require('lodash');
+    var _ = require('@sailshq/lodash');
 
     // Validate that the provided child process instance is at least close to the real deal.
     if (!_.isObject(inputs.childProcess) || !_.isFunction(inputs.childProcess.kill) || !_.isFunction(inputs.childProcess.on) || !_.isFunction(inputs.childProcess.removeListener)) {

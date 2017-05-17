@@ -76,7 +76,7 @@ module.exports = {
     var spawn = require('child_process').spawn;
 
     // Import `lodash`.
-    var _ = require('lodash');
+    var _ = require('@sailshq/lodash');
 
     // First, validate that the provided command is valid.
     // `child_process.spawn()` has some pretty harsh limitations here,

@@ -62,7 +62,7 @@ module.exports = {
     var util = require('util');
 
     // Import `lodash`.
-    var _ = require('lodash');
+    var _ = require('@sailshq/lodash');
 
     // Import `machinepack-json`.
     var MPJSON = require('machinepack-json');

@@ -92,7 +92,7 @@ module.exports = {
     var executeCmdInChildProc = require('child_process').exec;
 
     // Import `lodash`.
-    var _ = require('lodash');
+    var _ = require('@sailshq/lodash');
 
     // First, build up the options to pass in to `child_process.exec()`.
     var childProcOpts = {};

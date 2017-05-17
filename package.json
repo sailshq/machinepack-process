@@ -13,7 +13,7 @@
   "author": "Mike McNeil",
   "license": "MIT",
   "dependencies": {
-    "lodash": "3.10.1",
+    "@sailshq/lodash": "^3.10.2",
     "machine": "^13.0.0-7",
     "machinepack-json": "~2.0.0",
     "open": "0.0.5"
