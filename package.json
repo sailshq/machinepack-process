@@ -5,7 +5,7 @@
   "scripts": {
     "custom-tests": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js && ./node_modules/mocha/bin/mocha test/*.js --timeout 5000 --slow 2000",
     "test": "npm run lint && npm run custom-tests",
-    "lint": "./node_modules/eslint/bin/eslint . --max-warnings=0"
+    "lint": "node ./node_modules/eslint/bin/eslint . --max-warnings=0"
   },
   "keywords": [
     "Process",

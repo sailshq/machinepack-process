@@ -117,9 +117,9 @@ describe('spawnChildProcess()', function (){
           command: 'echo',
           cliArgs: ['hi #'+i]
         }).execSync();
-        childProc = _childProc;
-        // childProc.stdout.on('data', function onData(data){ console.log('->',data.toString()); });
-        childProc.once('error', function whenFirstErrorIsEmitted(err){ return next(err); });
+        // _childProc.stdout.on('data', function onData(data){ console.log('->',data.toString()); });
+        _childProc.once('error', function whenFirstErrorIsEmitted(err){ return next(err); });
+        childProcs.push(_childProc);
         return next();
       }, function afterwards(err){
         if (err) { return done(err); }
