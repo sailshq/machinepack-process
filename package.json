@@ -3,7 +3,9 @@
   "version": "3.0.0-4",
   "description": "Work with child procs and the running process.",
   "scripts": {
-    "test": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js && ./node_modules/mocha/bin/mocha tests/*.js --timeout 5000 --slow 2000"
+    "custom-tests": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js && ./node_modules/mocha/bin/mocha test/*.js --timeout 5000 --slow 2000",
+    "test": "npm run lint && npm run custom-tests",
+    "lint": "./node_modules/eslint/bin/eslint . --max-warnings=0"
   },
   "keywords": [
     "Process",
@@ -15,17 +17,18 @@
   "dependencies": {
     "@sailshq/lodash": "^3.10.2",
     "machine": "^13.0.0-7",
-    "machinepack-json": "~2.0.0",
+    "machinepack-json": "^2.0.0",
     "open": "0.0.5"
   },
   "devDependencies": {
     "async": "2.0.1",
+    "eslint": "3.19.0",
     "mocha": "3.0.2",
     "test-machinepack-mocha": "^2.1.7"
   },
   "machinepack": {
     "friendlyName": "Process",
-    "machineDir": "machines/",
+    "machineDir": "lib/",
     "machines": [
       "open-browser",
       "kill-child-process",
