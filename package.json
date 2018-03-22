@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "async": "2.0.1",
-    "eslint": "3.19.0",
+    "eslint": "4.11.0",
     "mocha": "3.0.2",
     "test-machinepack-mocha": "^2.1.7"
   },

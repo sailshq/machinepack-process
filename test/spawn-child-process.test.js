@@ -153,7 +153,7 @@ describe('spawnChildProcess()', function (){
           command: 'blah blah, space separated args arent allowed see',
         }).execSync();
       }
-      catch (e) {
+      catch (unusedErr) {
         return done();
       }
 
