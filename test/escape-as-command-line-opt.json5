@@ -20,13 +20,13 @@
       "returns": "true"
     },
 
-    // Null
+    // Basic string
     {
       "using": {
-        "value": null
+        "value": "hello"
       },
       "outcome": "success",
-      "returns": "null"
+      "returns": "hello"
     },
 
     // String with nasty single quotes everywhere

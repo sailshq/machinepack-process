@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@sailshq/lodash": "^3.10.2",
-    "machine": "^15.0.0-3",
+    "machine": "^15.0.0-23",
     "machinepack-json": "^2.0.0",
     "open": "0.0.5"
   },
@@ -24,7 +24,7 @@
     "async": "2.0.1",
     "eslint": "4.11.0",
     "mocha": "3.0.2",
-    "test-machinepack-mocha": "^2.1.7"
+    "test-machinepack-mocha": "^3.0.0"
   },
   "machinepack": {
     "friendlyName": "Process",

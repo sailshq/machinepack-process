@@ -150,7 +150,7 @@ describe('spawnChildProcess()', function (){
 
       try {
         childProc = Pack.spawnChildProcess({
-          command: 'blah blah, space separated args arent allowed see',
+          command: 'blah blah, space separated command stuff isnt allowed see',
         }).execSync();
       }
       catch (unusedErr) {
