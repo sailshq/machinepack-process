@@ -34,6 +34,7 @@
       "kill-child-process",
       "spawn-child-process",
       "execute-command",
+      "execute-command-and-stream",
       "escape-as-command-line-opt"
     ],
     "testsUrl": "https://travis-ci.org/treelinehq/machinepack-process"
@@ -41,5 +42,8 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:treelinehq/machinepack-process.git"
+  },
+  "engines": {
+    "node": ">=8"
   }
 }
