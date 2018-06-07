@@ -2,7 +2,6 @@
   "machine": "escape-as-command-line-opt",
   "expectations": [
 
-    // Number
     {
       "using": {
         "value": 4
@@ -11,7 +10,6 @@
       "returns": "4"
     },
 
-    // Boolean
     {
       "using": {
         "value": true
@@ -20,7 +18,6 @@
       "returns": "true"
     },
 
-    // Basic string
     {
       "using": {
         "value": "hello"
@@ -29,7 +26,6 @@
       "returns": "hello"
     },
 
-    // String with nasty single quotes everywhere
     {
       "using": {
         "value": "st'''uff w/ nasty quotes''' everywhere'"
@@ -38,7 +34,6 @@
       "returns": "st'\\'''\\'''\\''uff w/ nasty quotes'\\'''\\'''\\'' everywhere'\\''"
     },
 
-    // Tricky string that happens to be a JSON string
     {
       "using": {
         "value": "{ \"some encoded dict\" : \"st'''uff w/ nasty quotes''' everywhere'\"}"
@@ -47,7 +42,6 @@
       "returns": "{\"some encoded dict\":\"st'\\'''\\'''\\''uff w/ nasty quotes'\\'''\\'''\\'' everywhere'\\''\"}"
     },
 
-    // A dictionary
     {
       "using": {
         "value": {
@@ -55,7 +49,7 @@
             "foo": ["st'''uff w/ nasty quotes''' everywhere'"]
           },
           "some nested number": 32,
-          "some nested string" : "more st'''uff w/ nasty quotes''' everywhere'",
+          "some nested string" : "more st'''uff w/ nasty quotes''' everywhere'"
         }
       },
       "outcome": "success",
