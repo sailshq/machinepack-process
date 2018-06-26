@@ -16,7 +16,6 @@
   "license": "MIT",
   "dependencies": {
     "@sailshq/lodash": "^3.10.2",
-    "ajv": "^6.5.0",
     "machine": "^15.0.0-23",
     "machinepack-json": "^2.0.0",
     "opn": "5.3.0"
